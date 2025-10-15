@@ -103,11 +103,10 @@ def get_qb_customers() -> list[Customer]:
             if name_elem is not None and fax_elem is not None:
                 try:
                     cid = int(fax_elem.text)
-                    term_value = term_ref.text.strip() if term_ref is not None else ""
                     customers.append(
                         Customer(
                             name=name_elem.text.strip(),
-                            term=term_value,
+                            term=term_ref.text.strip() if term_ref is not None else "",
                             customer_id=cid,
                         )
                     )
@@ -129,7 +128,7 @@ def create_customers_batch_qbxml(customers: list[Customer]) -> str:
     requests = []
     for cust in customers:
         name = cust.name.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        term = cust.term.replace("&", "&amp;") if cust.term else ""
+        term = cust.term.strip() if cust.term and cust.term.strip().lower() != "none" else ""
         req = f"""        <CustomerAddRq>
             <CustomerAdd>
                 <Name>{name}</Name>
