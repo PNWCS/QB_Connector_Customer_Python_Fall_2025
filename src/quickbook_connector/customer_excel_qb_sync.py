@@ -6,6 +6,7 @@ compare them with QuickBooks Desktop via COM API, and synchronize them.
 
 from dataclasses import dataclass
 from typing import Any
+
 import win32com.client
 from openpyxl import load_workbook
 import xml.etree.ElementTree as ET
@@ -102,10 +103,11 @@ def get_qb_customers() -> list[Customer]:
             if name_elem is not None and fax_elem is not None:
                 try:
                     cid = int(fax_elem.text)
+                    term_value = term_ref.text.strip() if term_ref is not None else ""
                     customers.append(
                         Customer(
                             name=name_elem.text.strip(),
-                            term=term_ref.text.strip() if term_ref is not None else "",
+                            term=term_value,
                             customer_id=cid,
                         )
                     )
