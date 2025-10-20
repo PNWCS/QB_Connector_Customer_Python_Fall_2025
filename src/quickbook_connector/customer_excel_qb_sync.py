@@ -228,7 +228,7 @@ def process_customers(file_path: str) -> CustomerComparison:
     qb_customers = get_qb_customers()
     print(f"Found {len(qb_customers)} customers in QuickBooks")
 
-    comparison = compare_customers(excel_customers, qb_customers)
+    comparison = compare_customers(excel_customers,qb_customers)
 
     print("\n=== Comparison Results ===")
     print(f"\nMatching customers (same ID and same data): {comparison.matching_count}")
