@@ -79,9 +79,7 @@ def extract_customers(workbook_path: Path) -> List[Customer]:
                 continue  # Skip empty/invalid IDs
 
             # Construct the domain object tagged as sourced from Excel
-            terms.append(
-                Customer(record_id=record_id, name=name_str, source="excel")
-            )
+            terms.append(Customer(record_id=record_id, name=name_str, source="excel"))
     finally:
         workbook.close()  # Always close the workbook handle
 
@@ -95,7 +93,11 @@ if __name__ == "__main__":  # pragma: no cover - manual invocation
 
     # Allow running as a script: poetry run python payment_terms_cli/excel_reader.py
     try:
-        terms = extract_customers(Path("C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"))
+        terms = extract_customers(
+            Path(
+                "C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"
+            )
+        )
         for term in terms:
             print(term)
     except Exception as e:

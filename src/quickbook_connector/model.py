@@ -24,9 +24,7 @@ class Customer:
     source: SourceLiteral  # "excel" or "quickbooks"
 
     def __str__(self) -> str:
-        return (
-            f"customers(id={self.record_id}, name={self.name}, source={self.source})"
-        )
+        return f"customers(id={self.record_id}, name={self.name}, source={self.source})"
 
 
 @dataclass(slots=True)
@@ -44,9 +42,7 @@ class ComparisonReport:
     """Groups comparison outcomes for later processing."""
 
     excel_only: list[Customer] = field(default_factory=list)  # Present only in Excel
-    qb_only: list[Customer] = field(
-        default_factory=list
-    )  # Present only in QuickBooks
+    qb_only: list[Customer] = field(default_factory=list)  # Present only in QuickBooks
     conflicts: list[Conflict] = field(default_factory=list)  # Same ID, differing names
 
 
