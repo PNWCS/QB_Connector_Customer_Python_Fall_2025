@@ -33,7 +33,11 @@ def test_extract_customers_missing_worksheet(mock_load):
     workbook_mock.__getitem__.side_effect = KeyError("Sheet not found")
 
     with pytest.raises(ValueError, match="Worksheet 'customers' not found"):
-        extract_customers(Path("C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"))
+        extract_customers(
+            Path(
+                "C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"
+            )
+        )
 
     workbook_mock.close.assert_called_once()
 
@@ -48,7 +52,11 @@ def test_extract_customers_empty_sheet(mock_load):
     workbook_mock.__getitem__.return_value = mock_sheet
     mock_load.return_value = workbook_mock
 
-    result = extract_customers(Path("C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"))
+    result = extract_customers(
+        Path(
+            "C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"
+        )
+    )
 
     assert result == []
     workbook_mock.close.assert_called_once()
@@ -76,7 +84,11 @@ def test_extract_customers_valid_data(mock_load):
     workbook_mock.__getitem__.return_value = mock_sheet
     mock_load.return_value = workbook_mock
 
-    result = extract_customers(Path("C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"))
+    result = extract_customers(
+        Path(
+            "C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"
+        )
+    )
 
     # Only valid entries should be returned
     assert len(result) == 3
@@ -101,7 +113,11 @@ def test_extract_customers_non_integer_ids(mock_load):
     workbook_mock.__getitem__.return_value = mock_sheet
     mock_load.return_value = workbook_mock
 
-    result = extract_customers(Path("C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"))
+    result = extract_customers(
+        Path(
+            "C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"
+        )
+    )
 
     assert len(result) == 2
     assert result[0].record_id == "A15"
