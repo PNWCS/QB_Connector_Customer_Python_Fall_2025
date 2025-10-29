@@ -1,7 +1,7 @@
-"""Excel extraction stubs for payment terms.
+"""Excel extraction stubs for customer.
 
-This module reads the ``payment_terms`` worksheet from an Excel workbook using
-``openpyxl`` and converts rows into :class:`PaymentTerm` objects tagged with the
+This module reads the ``customers`` worksheet from an Excel workbook using
+``openpyxl`` and converts rows into :class:`Customer` objects tagged with the
 ``excel`` source.
 """
 
@@ -83,7 +83,7 @@ def extract_customers(workbook_path: Path) -> List[Customer]:
     finally:
         workbook.close()  # Always close the workbook handle
 
-    return terms  # Return the extracted list of payment terms
+    return terms  # Return the extracted list of customers
 
 
 __all__ = ["extract_customers"]  # Public API
@@ -91,7 +91,7 @@ __all__ = ["extract_customers"]  # Public API
 if __name__ == "__main__":  # pragma: no cover - manual invocation
     import sys
 
-    # Allow running as a script: poetry run python payment_terms_cli/excel_reader.py
+    # Allow running as a script: poetry run python customer_cli/excel_reader.py
     try:
         terms = extract_customers(
             Path(
@@ -102,5 +102,4 @@ if __name__ == "__main__":  # pragma: no cover - manual invocation
             print(term)
     except Exception as e:
         print(f"Error: {e}")
-        print("Usage: python customers/excel_reader.py <path-to-workbook.xlsx>")
         sys.exit(1)

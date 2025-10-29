@@ -1,7 +1,7 @@
-"""Domain models for payment term synchronisation.
+"""Domain models for customer synchronisation.
 
 These dataclasses represent the core entities shared throughout the tool:
-payment terms, conflicts between sources, and the aggregate comparison report.
+customer, conflicts between sources, and the aggregate comparison report.
 """
 
 from __future__ import annotations  # Postponed evaluation of annotations (PEP 563)
@@ -9,7 +9,7 @@ from __future__ import annotations  # Postponed evaluation of annotations (PEP 5
 from dataclasses import dataclass, field  # Dataclass utilities
 from typing import Literal  # Constrained string types for clarity
 
-SourceLiteral = Literal["excel", "quickbooks"]  # Origin of a PaymentTerm
+SourceLiteral = Literal["excel", "quickbooks"]  # Origin of a Customer
 ConflictReason = Literal[
     "name_mismatch", "missing_in_excel", "missing_in_quickbooks"
 ]  # Why a conflict exists
@@ -29,7 +29,7 @@ class Customer:
 
 @dataclass(slots=True)
 class Conflict:
-    """Describes a discrepancy between Excel and QuickBooks payment terms."""
+    """Describes a discrepancy between Excel and QuickBooks customers."""
 
     record_id: str  # Shared identifier for the conflicting term
     excel_name: str | None  # Name from Excel (None if missing there)
@@ -47,7 +47,7 @@ class ComparisonReport:
 
 
 __all__ = [
-    "customers",
+    "Customer",
     "Conflict",
     "ComparisonReport",
     "ConflictReason",
