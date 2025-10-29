@@ -54,7 +54,7 @@ def _qb_session() -> Iterator[tuple[object, object]]:
 
 def _send_qbxml(qbxml: str) -> ET.Element:
     """Send a QBXML request and return the parsed XML root element."""
-    with _qb_session() as (session, ticket): # Debug output to aid diagnostics
+    with _qb_session() as (session, ticket):  # Debug output to aid diagnostics
         raw_response = session.ProcessRequest(ticket, qbxml)  # type: ignore[attr-defined])  # Debug output of QB response
     return _parse_response(raw_response)
 
@@ -215,9 +215,7 @@ def add_customer(company_file: str | None, term: Customer) -> Customer:
     term_ret = root.find(".//StandardTermsRet")  # Extract the returned record, if any
     if term_ret is None:
         # Some responses may omit the created object; fall back to input values
-        return Customer(
-            record_id=term.record_id, name=term.name, source="quickbooks"
-        )
+        return Customer(record_id=term.record_id, name=term.name, source="quickbooks")
 
     record_id = term_ret.findtext("StdDiscountDays") or term.record_id  # Prefer QB's ID
     try:
@@ -241,7 +239,7 @@ def _escape_xml(value: str) -> str:
 
 
 __all__ = [
-    "fetch_customer",
+    "fetch_customers",
     "add_customer",
     "add_customer_batch",
 ]  # Public API
