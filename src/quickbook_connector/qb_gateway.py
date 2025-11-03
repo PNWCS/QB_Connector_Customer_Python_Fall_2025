@@ -55,7 +55,7 @@ def _qb_session() -> Iterator[tuple[object, object]]:
 def _send_qbxml(qbxml: str) -> ET.Element:
     """Send a QBXML request and return the parsed XML root element."""
     with _qb_session() as (session, ticket):  # Debug output to aid diagnostics
-        raw_response = session.ProcessRequest(ticket, qbxml)  # type: ignore[attr-defined])  # Debug output of QB response
+        raw_response = session.ProcessRequest(ticket, qbxml)  # type: ignore[attr-defined]
     return _parse_response(raw_response)
 
 
