@@ -225,6 +225,55 @@ def add_customer(company_file: str | None, term: Customer) -> Customer:
     name = (term_ret.findtext("Name") or term.name).strip()  # Prefer QB's name
 
     return Customer(record_id=record_id, name=name, source="quickbooks")
+def add_customers(customers: List[dict], company_file: str | None = None) -> List[Customer]:
+    """
+    Add customers in QuickBooks Desktop based on Fax ID.
+    Existing customers will be ignored; no updates will be made.
+    """
+    if not customers:
+        return []
+
+    added_customers: List[Customer] = []
+
+    for cust in customers:
+        name = _escape_xml(cust.get("name", "").strip())
+        fax = _escape_xml(cust.get("fax", "").strip())
+
+        if not name:
+            raise ValueError("Customer 'name' is required.")
+        if not fax:
+            raise ValueError("Customer 'fax' is required.")
+
+        # Build QBXML to add the customer
+        add_lines = [
+            "    <CustomerAddRq>",
+            "      <CustomerAdd>",
+            f"        <Name>{name}</Name>",
+            f"        <Fax>{fax}</Fax>",
+        ]
+        add_lines.extend(["      </CustomerAdd>", "    </CustomerAddRq>"])
+
+        add_qbxml = (
+            '<?xml version="1.0"?>\n'
+            '<?qbxml version="16.0"?>\n'
+            "<QBXML>\n"
+            '  <QBXMLMsgsRq onError="stopOnError">\n' +
+            "\n".join(add_lines) +
+            "\n  </QBXMLMsgsRq>\n</QBXML>"
+        )
+
+        try:
+            add_root = _send_qbxml(add_qbxml)
+            ret = add_root.find(".//CustomerRet")
+            name_out = (ret.findtext("FullName") or name).strip() if ret is not None else name
+            fax_out = (ret.findtext("Fax") or fax).strip() if ret is not None else fax
+            added_customers.append(Customer(record_id=fax_out, name=name_out, source="quickbooks"))
+            print(f"Added customer: {name_out} (Fax: {fax_out})")
+        except Exception as e:
+            print(f"Failed to add customer with Fax {fax}: {e}")
+
+    return added_customers
+
 
 
 def _escape_xml(value: str) -> str:
@@ -247,6 +296,16 @@ __all__ = [
 
 if __name__ == "__main__":  # manual test run
     try:
+        customers = [
+            {"name": "write", "fax": "1313"},
+            {"name": "new1", "fax": "888"},
+            {"name": "new3", "fax": "777"},
+        ]
+
+        result = add_customers(customers)
+        for c in result:
+            print(f"{c.name} (Fax: {c.record_id}) synced successfully.")
+
         customers = fetch_customers()  # No need to pass Excel path
         for customer in customers:
             print(customer)
