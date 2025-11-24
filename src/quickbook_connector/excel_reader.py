@@ -95,7 +95,7 @@ if __name__ == "__main__":  # pragma: no cover - manual invocation
     try:
         terms = extract_customers(
             Path(
-                "C:/Users/NarraS/Documents/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"
+                "C:/Users/BoyaA/Desktop/QB_Connector_Customer_Python_Fall_2025/company_data.xlsx"
             )
         )
         for term in terms:

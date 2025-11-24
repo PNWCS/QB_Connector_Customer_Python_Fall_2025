@@ -1,13 +1,7 @@
 {
   "status": "success",
-  "timestamp": "2025-11-24T19:17:36.162208+00:00",
-  "added_customers": [
-    {
-      "record_id": "35",
-      "name": "aboya",
-      "source": "excel"
-    }
-  ],
+  "timestamp": "2025-11-24T19:27:51.623859+00:00",
+  "added_customers": [],
   "conflicts": [
     {
       "record_id": "14",
@@ -28,6 +22,6 @@
       "reason": "missing_in_excel"
     }
   ],
-  "same_customers": 2,
+  "same_customers": 3,
   "error": null
 }
