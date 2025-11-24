@@ -18,7 +18,6 @@ def _serialise_conflict(conflict: Conflict) -> Dict[str, Any]:
         "excel_name": conflict.excel_name,
         "qb_name": conflict.qb_name,
         "reason": conflict.reason,
-        
     }
 
 

@@ -112,7 +112,9 @@ def fetch_customers(company_file: str | None = None) -> List[Customer]:
     return terms  # Return all collected terms
 
 
-def add_customer_batch(company_file: str | None, customers: List[Customer]) -> List[Customer]:
+def add_customer_batch(
+    company_file: str | None, customers: List[Customer]
+) -> List[Customer]:
     """Add multiple customers to QuickBooks in a batch using FaxID as the unique identifier."""
 
     if not customers:
@@ -136,11 +138,11 @@ def add_customer_batch(company_file: str | None, customers: List[Customer]) -> L
     qbxml = (
         '<?xml version="1.0"?>\n'
         '<?qbxml version="13.0"?>\n'
-        '<QBXML>\n'
+        "<QBXML>\n"
         '  <QBXMLMsgsRq onError="continueOnError">\n'
-        + "\n".join(requests) +
-        '\n  </QBXMLMsgsRq>\n'
-        '</QBXML>'
+        + "\n".join(requests)
+        + "\n  </QBXMLMsgsRq>\n"
+        "</QBXML>"
     )
 
     try:
@@ -209,7 +211,11 @@ def add_customer(company_file: str | None, term: Customer) -> Customer:
     name = (term_ret.findtext("Name") or term.name).strip()  # Prefer QB's name
 
     return Customer(record_id=record_id, name=name, source="quickbooks")
-def add_customers(customers: List[dict], company_file: str | None = None) -> List[Customer]:
+
+
+def add_customers(
+    customers: List[dict], company_file: str | None = None
+) -> List[Customer]:
     """
     Add customers in QuickBooks Desktop based on Fax ID.
     Existing customers will be ignored; no updates will be made.
@@ -241,23 +247,26 @@ def add_customers(customers: List[dict], company_file: str | None = None) -> Lis
             '<?xml version="1.0"?>\n'
             '<?qbxml version="16.0"?>\n'
             "<QBXML>\n"
-            '  <QBXMLMsgsRq onError="stopOnError">\n' +
-            "\n".join(add_lines) +
-            "\n  </QBXMLMsgsRq>\n</QBXML>"
+            '  <QBXMLMsgsRq onError="stopOnError">\n'
+            + "\n".join(add_lines)
+            + "\n  </QBXMLMsgsRq>\n</QBXML>"
         )
 
         try:
             add_root = _send_qbxml(add_qbxml)
             ret = add_root.find(".//CustomerRet")
-            name_out = (ret.findtext("FullName") or name).strip() if ret is not None else name
+            name_out = (
+                (ret.findtext("FullName") or name).strip() if ret is not None else name
+            )
             fax_out = (ret.findtext("Fax") or fax).strip() if ret is not None else fax
-            added_customers.append(Customer(record_id=fax_out, name=name_out, source="quickbooks"))
+            added_customers.append(
+                Customer(record_id=fax_out, name=name_out, source="quickbooks")
+            )
             print(f"Added customer: {name_out} (Fax: {fax_out})")
         except Exception as e:
             print(f"Failed to add customer with Fax {fax}: {e}")
 
     return added_customers
-
 
 
 def _escape_xml(value: str) -> str:

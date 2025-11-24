@@ -30,7 +30,7 @@ def compare_customers(
                     reason="data_mismatch",
                 )
             )
-    
+
     for rid in qb_by_id:
         if rid not in excel_by_id:
             qb_c = qb_by_id[rid]

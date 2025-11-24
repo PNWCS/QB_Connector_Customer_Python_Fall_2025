@@ -10,9 +10,7 @@ from dataclasses import dataclass, field  # Dataclass utilities
 from typing import Literal  # Constrained string types for clarity
 
 SourceLiteral = Literal["excel", "quickbooks"]  # Origin of a Customer
-ConflictReason = Literal[
-    "data_mismatch", "missing_in_excel"
-]  # Why a conflict exists
+ConflictReason = Literal["data_mismatch", "missing_in_excel"]  # Why a conflict exists
 
 
 @dataclass(slots=True)

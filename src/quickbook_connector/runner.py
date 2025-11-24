@@ -34,7 +34,8 @@ def run_customer_sync(
 
         # 4. Identify mutual customers (same ID, same name)
         mutual_customers = [
-            c for c in excel_customers
+            c
+            for c in excel_customers
             if c.record_id in {qb.record_id for qb in qb_customers}
             and c.name in {qb.name for qb in qb_customers}
         ]
