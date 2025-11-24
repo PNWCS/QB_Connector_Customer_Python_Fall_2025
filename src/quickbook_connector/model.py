@@ -11,7 +11,7 @@ from typing import Literal  # Constrained string types for clarity
 
 SourceLiteral = Literal["excel", "quickbooks"]  # Origin of a Customer
 ConflictReason = Literal[
-    "name_mismatch", "missing_in_excel", "missing_in_quickbooks"
+    "data_mismatch", "missing_in_excel"
 ]  # Why a conflict exists
 
 

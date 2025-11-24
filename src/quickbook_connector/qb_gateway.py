@@ -112,67 +112,51 @@ def fetch_customers(company_file: str | None = None) -> List[Customer]:
     return terms  # Return all collected terms
 
 
-def add_customer_batch(
-    company_file: str | None, terms: List[Customer]
-) -> List[Customer]:
-    """Create multiple customer terms in QuickBooks in a single batch request."""
+def add_customer_batch(company_file: str | None, customers: List[Customer]) -> List[Customer]:
+    """Add multiple customers to QuickBooks in a batch using FaxID as the unique identifier."""
 
-    if not terms:
-        return []  # Nothing to add; return early
+    if not customers:
+        return []
 
-    # Build the QBXML with multiple StandardTermsAddRq entries
-    requests = []  # Collect individual add requests to embed in one batch
-    for term in terms:
-        try:
-            days_value = int(term.record_id)  # QuickBooks expects a numeric days value
-        except ValueError as exc:
-            raise ValueError(
-                f"record_id must be numeric for QuickBooks customer terms: {term.record_id}"
-            ) from exc
-
-        # Build the QBXML snippet for this term creation
+    requests = []
+    for cust in customers:
+        # Build a QBXML CustomerAddRq snippet
         requests.append(
-            f"    <StandardTermsAddRq>\n"
-            f"      <StandardTermsAdd>\n"
-            f"        <Name>{_escape_xml(term.name)}</Name>\n"
-            f"        <StdDiscountDays>{days_value}</StdDiscountDays>\n"
-            f"        <DiscountPct>0</DiscountPct>\n"
-            f"      </StandardTermsAdd>\n"
-            f"    </StandardTermsAddRq>"
+            f"""
+            <CustomerAddRq>
+              <CustomerAdd>
+                <Name>{_escape_xml(cust.name)}</Name>
+                <CompanyName>{_escape_xml(cust.name)}</CompanyName>
+                <Fax>{_escape_xml(cust.record_id)}</Fax>
+              </CustomerAdd>
+            </CustomerAddRq>
+            """
         )
 
     qbxml = (
         '<?xml version="1.0"?>\n'
         '<?qbxml version="13.0"?>\n'
-        "<QBXML>\n"
-        '  <QBXMLMsgsRq onError="continueOnError">\n' + "\n".join(requests) + "\n"
-        "  </QBXMLMsgsRq>\n"
-        "</QBXML>"
-    )  # Batch request enabling partial success on errors
+        '<QBXML>\n'
+        '  <QBXMLMsgsRq onError="continueOnError">\n'
+        + "\n".join(requests) +
+        '\n  </QBXMLMsgsRq>\n'
+        '</QBXML>'
+    )
 
     try:
-        root = _send_qbxml(qbxml)  # Submit the batch to QuickBooks
+        root = _send_qbxml(qbxml)
     except RuntimeError as exc:
-        # If the entire batch fails, return empty list
         print(f"Batch add failed: {exc}")
         return []
 
-    # Parse all responses
-    added_terms: List[Customer] = []  # Terms confirmed/returned by QuickBooks
-    for term_ret in root.findall(".//StandardTermsRet"):
-        record_id = term_ret.findtext("StdDiscountDays")  # Extract the ID
-        if not record_id:
-            continue
-        try:
-            record_id = str(int(record_id))  # Normalise numeric string
-        except ValueError:
-            record_id = record_id.strip()
-        name = (term_ret.findtext("Name") or "").strip()  # Extract and trim name
-        added_terms.append(
-            Customer(record_id=record_id, name=name, source="quickbooks")
-        )
+    # Parse responses and build the added customers list
+    added_customers = []
+    for cust_ret in root.findall(".//CustomerRet"):
+        name = (cust_ret.findtext("Name") or "").strip()
+        fax = (cust_ret.findtext("Fax") or "").strip()
+        added_customers.append(Customer(record_id=fax, name=name, source="quickbooks"))
 
-    return added_terms  # Return all terms that were added/acknowledged
+    return added_customers
 
 
 def add_customer(company_file: str | None, term: Customer) -> Customer:
