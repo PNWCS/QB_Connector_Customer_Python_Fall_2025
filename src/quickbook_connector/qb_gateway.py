@@ -299,7 +299,7 @@ if __name__ == "__main__":  # manual test run
         for c in result:
             print(f"{c.name} (Fax: {c.record_id}) synced successfully.")
 
-        customers = fetch_customers()  # No need to pass Excel path
+        # customers = fetch_customers()  # No need to pass Excel path
         for customer in customers:
             print(customer)
     except Exception as e:
