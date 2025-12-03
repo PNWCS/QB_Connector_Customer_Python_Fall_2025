@@ -5,7 +5,7 @@ from typing import List
 
 from quickbook_connector import compare, excel_reader, qb_gateway
 from quickbook_connector.model import ComparisonReport, Customer
-from quickbook_connector.report import write_report_to_json, iso_timestamp
+from quickbook_connector.report import iso_timestamp
 
 DEFAULT_REPORT_NAME = "customer_report.json"
 
