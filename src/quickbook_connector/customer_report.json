@@ -1,0 +1,27 @@
+{
+  "status": "success",
+  "timestamp": "2025-11-24T19:27:51.623859+00:00",
+  "added_customers": [],
+  "conflicts": [
+    {
+      "record_id": "14",
+      "excel_name": "xyz",
+      "qb_name": "tyu",
+      "reason": "data_mismatch"
+    },
+    {
+      "record_id": "6",
+      "excel_name": null,
+      "qb_name": "DOLLY",
+      "reason": "missing_in_excel"
+    },
+    {
+      "record_id": "19",
+      "excel_name": null,
+      "qb_name": "sunny",
+      "reason": "missing_in_excel"
+    }
+  ],
+  "same_customers": 3,
+  "error": null
+}
