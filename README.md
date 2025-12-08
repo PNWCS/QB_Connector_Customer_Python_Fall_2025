@@ -36,7 +36,7 @@ cd dist
 Run the executable with the same arguments the Python entry point expects:
 
 ```bash
-customers.exe --workbook C:\path\to\company_data.xlsx --output C:\path\to\report.json
+.\customers.exe --workbook C:\path\to\company_data.xlsx --output C:\path\to\report.json
 ```
 
 If you omit --output, the report defaults to customer_report.json in the current directory.You can also invoke it without cd by using the absolute path, e.g.:
